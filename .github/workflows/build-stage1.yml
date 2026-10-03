@@ -1,0 +1,39 @@
+name: "1차: 현재 상태 빌드 테스트"
+
+on:
+  push:
+    branches: [ master ]  # master 대신 main 브랜치로 추적하도록 변경
+  workflow_dispatch:
+
+jobs:
+  build-current:
+    strategy:
+      matrix:
+        os: [macos-13, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: 소스코드 가져오기
+      uses: actions/checkout@v4
+
+    - name: CMake 설치
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: 'latest'
+
+    # 파일 존재 확인 및 권한 부여를 안전하게 처리
+    - name: 스크립트 실행 권한 부여
+      run: |
+        pwd
+        ls -la toolchains/macos/
+        chmod +x ./toolchains/macos/macos_compile.sh
+
+    - name: NativeBLE 순정 스크립트 실행
+      run: ./toolchains/macos/macos_compile.sh
+
+    - name: 빌드된 ZIP 파일 결과물 저장
+      uses: actions/upload-artifact@v4
+      with:
+        name: Stage1-${{ matrix.os }}-binary
+        path: bin/darwin/*.zip
+
