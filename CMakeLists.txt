@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5...3.25)
 
 SET(PROJECT_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/cmake/configure_cmake.cmake)
